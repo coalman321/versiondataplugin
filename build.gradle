@@ -1,0 +1,29 @@
+plugins {
+    id "com.gradle.plugin-publish" version "0.10.1"
+    id 'java-gradle-plugin'
+}
+
+group = 'org.frc4145.versiondata'
+version = '0.1'
+
+gradlePlugin {
+    plugins {
+        versiondataplugin {
+            id = 'org.frc4145.versiondata'
+            implementationClass = 'org.frc4145.versiondata.VersionPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'http://www.gradle.org/'
+    vcsUrl = ''
+    description = 'plugin for managing software versions within an FRC gradle project'
+    tags = ['FRC', 'build tools']
+    plugins {
+        versiondataplugin {
+            // id is captured from java-gradle-plugin configuration
+            displayName = 'FRC version managment plugin'
+        }
+    }
+}
