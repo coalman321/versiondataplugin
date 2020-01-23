@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.frc4145.versiondata'
-version = '0.1'
+version = '1.02'
 
 gradlePlugin {
     plugins {
@@ -16,8 +16,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'http://www.gradle.org/'
-    vcsUrl = ''
+    website = 'https://github.com/coalman321/versiondataplugin'
+    vcsUrl = 'https://github.com/coalman321/versiondataplugin'
     description = 'plugin for managing software versions within an FRC gradle project'
     tags = ['FRC', 'build tools']
     plugins {

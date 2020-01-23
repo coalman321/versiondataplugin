@@ -28,47 +28,58 @@ public class VersionData extends DefaultTask {
 
     @TaskAction
     void doVersionData(){
-        File versionFile = new File(System.getProperty("user.dir") + filePath);
+        File versionFile = new File(System.getProperty("user.dir") + File.separator + filePath);
+        PrintWriter writer = null;
+
         try{
+            //if the file does not exist create a new one
+            if(!versionFile.exists()){
+                versionFile.createNewFile();
+            }
+
             //pull data from versiondata file
             String versionID = findData("VERSION_ID", versionFile),
                     buildAuthor = findData("BUILD_AUTHOR", versionFile),
                     buildDate = findData("BUILD_DATE", versionFile);
 
             //create a writer
-            PrintWriter writer =  new PrintWriter(versionFile.getAbsolutePath());
+            writer =  new PrintWriter(versionFile.getAbsolutePath());
+
+            System.out.println(versionID + " " + buildAuthor + " " + buildDate);
 
             //check to see if any of the data is missing.
             //if it is, overwrite the file
             if(versionID == null || buildAuthor == null || buildDate == null){
                 writer.print(newFile);
-                writer.flush();
                 throw new GradleException("The " + versionFile.getName() + " file did not exist or was malformed." +
                         " The file has been re-created. Check to make sure it is correct and deploy again.");
             }
 
             //create the new file
-            String newData = "VERSION_ID = " + (Integer.parseInt(versionID) + 1) + ";\n";
-            newData += "BUILD_AUTHOR = " + System.getProperty("user.name") + ";\n";
-            newData += "BUILD_DATE = " + new SimpleDateFormat(
+            String newData = "VERSION_ID=" + (Integer.parseInt(versionID) + 1) + ";\n";
+            newData += "BUILD_AUTHOR=" + System.getProperty("user.name") + ";\n";
+            newData += "BUILD_DATE=" + new SimpleDateFormat(
                     "yyyy/MM/dd-HH:mm:ss").format(new Date()) + ";\n";
 
             //write the file
-            writer.print(newFile);
-            writer.flush();
-
-
-
+            writer.print(newData);
+            
 
         } catch (IOException e){
-            throw new GradleException("The " + versionFile.getName() + " file could not be opened. check " +
-                    "it to see if it has the correct permissions.");
+            throw new GradleException("The " + versionFile.getName() + " file could not be opened. This plugin"
+                + "This plugin has attempted to create it ");
+        }finally{
+            if(writer != null){
+                writer.flush();
+                writer.close();
+            }
         }
     }
 
     private String findData(String name, File file) throws IOException {
         String content = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-        name += " =";
+        name += "=";
+
         int loc = content.indexOf(name);
         if (loc < 0) return null;
 
@@ -76,7 +87,7 @@ public class VersionData extends DefaultTask {
         int endlineSemicolon = fromKeyToEnd.indexOf(";\n");
         if (endlineSemicolon < 0) return null;
 
-        return content.substring(loc + name.length(), endlineSemicolon);
+        return fromKeyToEnd.substring(0, endlineSemicolon);
     }
 
 

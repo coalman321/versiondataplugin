@@ -5,6 +5,8 @@ import org.gradle.api.Project;
 
 public class VersionPlugin implements Plugin<Project> {
     public void apply(Project project) {
-        project.getTasks().create("versionData", VersionData.class, (task) -> {});
+        project.getTasks().create("versionData", VersionData.class, (task) -> {
+            task.setFilePath("src/main/deploy/version.dat");
+        });
     }
 }
