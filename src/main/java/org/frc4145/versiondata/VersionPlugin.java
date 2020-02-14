@@ -8,5 +8,10 @@ public class VersionPlugin implements Plugin<Project> {
         project.getTasks().create("versionData", VersionData.class, (task) -> {
             task.setFilePath("src/main/deploy/version.dat");
         });
+
+        project.getTasks().create("debug_versiondata", VersionData.class, (task) -> {
+            task.setFilePath("src/main/deploy/version.dat");
+            task.setDebug(true);
+        });
     }
 }
